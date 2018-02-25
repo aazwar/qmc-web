@@ -1,0 +1,175 @@
+<style type="text/css" media="screen">
+  /* Chat chat_containers */
+  .chat_container {
+      border: 2px solid #dedede;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 10px 0;
+  }
+
+  /* Darker chat chat_container */
+  .darker {
+      border-color: #ccc;
+      background-color: #ddd;
+  }
+  
+  .selected_user {
+    background-color: #eee;
+  }
+  
+  /* Clear floats */
+  .chat_container::after {
+      content: "";
+      clear: both;
+      display: table;
+  }
+
+  /* Style images */
+  .chat_container img {
+      float: left;
+      max-width: 60px;
+      width: 100%;
+      margin-right: 20px;
+      border-radius: 50%;
+  }
+
+  /* Style the right image */
+  .chat_container img.right {
+      float: right;
+      margin-left: 20px;
+      margin-right:0;
+  }
+
+  /* Style time text */
+  .time-right {
+      float: right;
+      color: #aaa;
+  }
+
+  /* Style time text */
+  .time-left {
+      float: left;
+      color: #999;
+  }
+  .user_list {
+    padding: 10px;
+    margin: 2px;
+    border: 1px solid black;
+  }
+</style>
+<table>
+  <tr>
+    <td style="width: 600px">
+    <div id="messages" style="width: 600px; height: 400px; overflow-y: scroll;">
+      <div class="chat_container">
+        <img src="{{@BASE}}/images/doctor.jpg" alt="Avatar">
+        <p>Select user from right pane to see the conversation.</p>
+        <span class="time-right">11:00</span>
+      </div>
+      <br>
+    </div>    
+    <div>
+      <textarea id="reply_text" style="width: 520px; height: 80px"></textarea>
+      <button id="send_reply">Send</button>
+    </div>
+    </td>
+    <td style="width: 200px; height: 550px; vertical-align: top; padding-left: 20px; overflow-y: scroll;">
+      <div style="font-weight: bold">Users</div>
+      <div id="user_list">
+        <div id="QMC-c2490fcc-052d-4254-913e-cc6a7536fc89" class="user_list">User1</div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+  </div>
+  
+</div>
+<script type="text/javascript">
+  let current_channel = '';
+  function loadUserList() {
+    $.post("{{@BASE}}/ajax/chat/user-list", {}, (response) => {
+      let data = $.parseJSON(response);
+      $('#user_list').empty();
+      data.map(u => {
+        $('#user_list').append(`<div id="${u.channel_id}" class="user_list" onclick="user_click(this)">${u.name}</div>`);
+      });
+      if(!current_channel) {
+        $(`#${data[0].channel_id}`).click();
+      } else {
+        $(`#${current_channel}`).addClass('selected_user');
+      }
+    });
+  }
+  
+  function user_click(u) {        
+    let channelId = $(u).prop('id');
+    if(channelId == current_channel) return;
+    $(`#${current_channel}`).removeClass('selected_user');
+    $(`#${channelId}`).addClass('selected_user');
+    current_channel = channelId;    
+    load_messages(channelId);
+  }
+  
+  function load_messages(channel_id) {
+    $.post("{{@BASE}}/ajax/chat/message-list", {channel_id}, (response) => {
+      let data = $.parseJSON(response);
+      $('#messages').empty();
+      console.log(data);
+      data.map(m => {
+        const text = m.text.replace(/\n/g, '</br>');
+        if(m.user_id == 1) {
+          $('#messages').append(`
+            <div class="chat_container darker">
+              <img src="{{@BASE}}/images/patient.jpg" alt="Avatar" class="right">
+              <p>${text}</p>
+              <span class="time-left">${moment(m.datetime).format('HH:mm')}</span>
+            </div>
+            `)
+        } else {
+         $('#messages').append(`
+            <div class="chat_container">
+              <img src="{{@BASE}}/images/doctor.jpg" alt="Avatar">
+              <p>${text}</p>
+              <span class="time-right">${moment(m.datetime).format('HH:mm')}</span>
+            </div>
+           `)
+        }
+      });
+      scroll_messages_bottom();
+    });
+  }
+  
+  function scroll_messages_bottom() {
+    let height = $('#messages')[0].scrollHeight;
+    $('#messages').scrollTop(height+50);
+  }
+  
+  $('#send_reply').click(() => {
+    let data = {
+      channel_id: current_channel,
+      datetime: moment().toDate().toISOString(),
+      text: $('#reply_text').val(),
+    }
+    $.post("{{@BASE}}/ajax/chat/reply", data, (response) => {
+      $('#messages').append(`
+         <div class="chat_container">
+           <img src="{{@BASE}}/images/doctor.jpg" alt="Avatar">
+           <p>${data.text}</p>
+           <span class="time-right">${moment(data.datetime).format('HH:mm')}</span>
+         </div>
+      `);
+      $('#reply_text').val('');
+      scroll_messages_bottom();
+    });
+  });
+  
+$(() => {
+  loadUserList();
+  setInterval(() => {
+    loadUserList();
+    load_messages(current_channel);
+  }, 30000);
+})
+</script>

@@ -1,0 +1,7 @@
+<pre>
+{{@ERROR.status}}
+{{@ERROR.text}}
+<check if="{{@ERROR.code == 500}}">
+{{@ERROR.trace|raw}}
+</check>
+</pre>

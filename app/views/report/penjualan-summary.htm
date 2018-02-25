@@ -1,0 +1,105 @@
+<p><strong>Catatan:</strong> Data yang ditampilkan adalah data statik, parameter tidak mempengaruhi data.<br>
+Klik cetak untuk melakukan pencetakan.
+</p>
+<p>
+	{{ HtmlUtil::datePicker() }}
+	<span class="input-group-addon"><i class="fa fa-list-ul fa-fw"></i></span>
+	<input type="hidden" id="jenis" style="width: 200px;">
+	<br><br>
+	{{ HtmlUtil::longtermRadio() }}
+	<input type="button" value="Tampilkan Data" id="load"><br>
+</p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+function setupPenjualanGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "Jenis|Jenis|Jenis|Jumlah|Diskon|Sales|Sales %|Sales %|Keuntungan|Margin",
+    colDefinitions: ["mjenis|hidden", "sjenis|hidden",
+      "ajenis|150|text|count|({0}) total",
+      "jumlah|30|number|sum", "diskon|60|currency|sum",
+      "subtotal|80|currency|sum",
+      "salespl|40|percentage", "salesp|40|percentage|sum",
+      "keuntungan|60|currency|sum",
+      "margin|40|percentage|avg"
+    ],
+    caption: 'Detail Penjualan',
+    maxHeight: 375,
+    width: 700,
+    multiselect: false,
+    groupCol: ['mjenis', 'sjenis'],
+    footerSummary: ["subtotal|sum", "keuntungan|sum", "salesp|sum",
+      "diskon|sum",
+      "ajenis|'Total'", "jumlah|sum",
+      "margin|(sumkeuntungan*100.0/sumsubtotal)"
+    ],
+    expandOnLoad: true,
+    otherOptions: {
+      onRightClickRow(rowid, iRow, iCol, e) {
+        open_grafik_jenis(rowid)
+      }
+    }
+  });
+}
+
+// Load button
+$('#load').click(() => {
+  const url = `{{@BASE}}/ajax/laporan/penjualan/summary?${input2param()}`;
+  let title;
+  switch($('#term :checked').val()) {
+    case 'harian':
+      title = `Laporan Penjualan Perjenis tanggal ${$('#tanggal').val()}`;
+      break;
+    case 'mingguan':
+      const date = $('#tanggal').datepicker('getDate');
+      var year = date.getFullYear();
+      let week = getWeek(date);
+      const weekString = ` (${weekRangeString(week, year)})`;
+      if(week < 10) week = `0${week}`;
+      title =
+        `Laporan Penjualan Perjenis Mingguan ${year}W${week}${weekString}`;
+      break;
+    case 'bulanan':
+      var year = $('#tanggal').datepicker('getDate').getFullYear();
+      var month = $('#tanggal').datepicker('getDate').getMonth() + 1;
+      title =
+        `Laporan Penjualan Perjenis Bulanan ${moment.months(month-1)} ${year}`;
+      break;
+    case 'trimester':
+      var year = $('#tanggal').datepicker('getDate').getFullYear();
+      var month = $('#tanggal').datepicker('getDate').getMonth();
+      const quarter = Math.floor(month / 3) + 1;
+      title =
+        `Laporan Penjualan Perjenis Trimester ${romanize(quarter)} ${year}`;
+      break;
+    case 'semester':
+      var year = $('#tanggal').datepicker('getDate').getFullYear();
+      var month = $('#tanggal').datepicker('getDate').getMonth() + 1 + 1;
+      const semester = month > 6 ? 'II' : 'I';
+      title = `Laporan Penjualan Perjenis Semester ${semester} ${year}`;
+      break;
+    case 'tahunan':
+      var year = $('#tanggal').datepicker('getDate').getFullYear();
+      title = `Laporan Penjualan Perjenis Tahunan ${year}`;
+      break;
+  }
+  displayGrid('list', url, title);
+});
+
+$(() => {
+  $.get("{{@BASE}}/ajax/reference/jenis-list", {}, data => {
+    const obj = $.parseJSON(data);
+    obj.unshift({
+      id: '',
+      text: '-- Semua --'
+    });
+    $('#jenis').select2({
+      data: obj,
+    });
+  });
+
+  setupPenjualanGrid();
+});
+</script>

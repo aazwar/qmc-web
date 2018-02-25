@@ -1,0 +1,11 @@
+Data
+  Conversation | chat/manager
+  Department | table/department
+  Doctor | table/doctor
+  Working Hour | table/working-hour
+  Appointment | table/appointment
+  History Case
+    Upload Image | case-history/upload
+Admin
+  Daftar User | admin/user-master
+  Clear Cache | admin/clear-cache  

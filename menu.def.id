@@ -1,0 +1,14 @@
+Data
+  Department | table/department
+  Doctor | table/doctor
+Laporan
+  Penjualan | report/penjualan
+  Penjualan Per-nota | report/penjualan-pernota
+  Summary Penjualan | report/penjualan-summary
+Grafik
+  Rerata Belanja | graphic/belanja
+  Pelanggan | graphic/pelanggan
+  Pola Belanja | graphic/pola-belanja
+Admin
+  Daftar User | admin/user-master
+  Clear Cache | admin/clear-cache  

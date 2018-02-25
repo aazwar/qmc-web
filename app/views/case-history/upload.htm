@@ -1,0 +1,27 @@
+<form action="{{@BASE}}/case/upload" method="post" enctype="multipart/form-data">
+<table>
+  <tr>
+    <td>Category</td>
+    <td>{{ HtmlUtil::select('case_category', '1', '', 'id', 'name')}}</td>
+  </tr>
+  <tr>
+    <td>Before Image</td>
+    <td><input type="file" name="before_image"></td>
+  </tr>
+  <tr>
+    <td>Before Caption</td>
+    <td><textarea name="before_caption" rows="5" cols="120"></textarea></td>
+  </tr>
+  <tr>
+    <td>After Image</td>
+    <td><input type="file" name="after_image"></td>
+  </tr>
+  <tr>
+    <td>After Caption</td>
+    <td><textarea name="after_caption" rows="5" cols="120"></textarea></td>
+  </tr>
+  <tr>    
+    <td><input type="submit" value="Upload"></td>
+  </tr>
+</table>
+</form>

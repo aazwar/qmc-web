@@ -1,0 +1,285 @@
+<div id="help-dialog">
+- Klik tombol <strong>"Tampilkan Data"</strong> untuk menampilkan data kunjungan pada periode yang dipilih<br>
+</div>
+{{ HtmlUtil::yearSelect() }}
+{{ HtmlUtil::monthSelect() }}
+  <select name="visit-type" id="visit-type">
+    <option value="1" selected>Kunjungan Pelanggan</option>
+    <option value="2">Kunjungan Member</option>
+    <option value="3">Belanja Pelanggan</option>
+	</select>
+ <input type="button" value="Tampilkan Data" id="load"><br><br>
+ <div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+ <div id="chart2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script src="{{@BASE}}/js/highcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+function buildChart1() {
+	var year = $("#year").val();
+	var month = $("#month").val();
+	var options = {
+		credits: { enabled: false },
+      chart: {
+		  	type: 'column',
+				renderTo: 'chart',
+	      plotBackgroundColor: null,
+	      plotBorderWidth: null,
+	      plotShadow: false,
+	    },
+			title: {
+         text: 'Kunjungan Pelanggan'
+      },
+			subtitle: {
+				text: 'Januari 2017'
+			},
+      xAxis: {
+          type: 'datetime',
+					Categories: ['Non-member', 'Member'],
+      },
+			yAxis: {
+				title: {
+					text: 'Pengunjung',
+				}
+			},
+      series: [{
+					type: 'column',
+					name: 'Non-member',
+          pointInterval: 24 * 3600 * 1000,
+          pointStart: Date.UTC(2017, 0, 1),
+      }, {
+					type: 'column',
+					name: 'Member',
+          pointInterval: 24 * 3600 * 1000,
+          pointStart: Date.UTC(2017, 0, 1),
+      }, {
+					type: 'pie',
+					center: [100, 80],
+          size: 100,
+          showInLegend: false,
+					tooltip: {
+	    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
+	        },
+					dataLabels: {
+            enabled: true,
+            color: '#000000',
+            connectorColor: '#000000',
+            format: '{point.percentage:.1f} %'
+          }
+			}],
+			legend: {
+				labelFormatter() {
+				  return '<div class="' + this.name + '-arrow"></div>' + this.name +
+					'<br/><span style="font-size:10px; color:#ababaa">' + 
+					number_format(this.options.total,0) + ' ('+
+					percent_format(this.options.percentage) + ')</span>';
+				}
+			}			
+  };
+	$.getJSON('{{@BASE}}/ajax/grafik/pelanggan1', {type: 1, year: year, month: month, reset: resetCache }, function(data){		
+		options.series[0].data = data[0].map(i => parseFloat(i));
+		options.series[1].data = data[1].map(i => parseFloat(i));
+		options.series[0].total = data[0].reduce((a,b) => parseFloat(a)+parseFloat(b));
+		options.series[1].total = data[1].reduce((a,b) => parseFloat(a)+parseFloat(b));
+		var total = options.series[0].total + options.series[1].total;
+		options.series[0].percentage = options.series[0].total * 100.0 / total;
+		options.series[1].percentage = options.series[1].total * 100.0 / total;
+		options.series[2].data = [{
+			name: 'Non-member',
+			y: data[2][0], 
+		}, {
+			name: 'Member',
+			y: data[2][1],	
+		}];
+    console.log(options);
+		var chart = new Highcharts.Chart(options);
+	});
+	var options2 = {};
+	$.extend(true, options2, options, {
+		chart: { 
+			renderTo: 'chart2',
+			type: 'spline',
+		},
+	});
+	options2.series = [
+		{ name: 'Hari biasa' },
+		{ name: 'Akhir pekan' },
+		{ name: 'Rata-rata' }
+	];
+	options2.xAxis = { categories: [8,9,10,11,12,13,14,15,16,17,18,19,20,21] };
+	options2.legend = {
+		labelFormatter() {
+		  return '<div class="' + this.name + '-arrow"></div>' + this.name +
+			'<br/><span style="font-size:10px; color:#ababaa">' + 
+			number_format(this.options.total,0) + ' ('+
+			number_format(this.options.hourly,2) +
+			'/jam)</span>';
+		}
+	}
+	$.getJSON('{{@BASE}}/ajax/grafik/pelanggan2', {type: 11, year: year, month: month, reset: resetCache }, function(data) {
+		options2.series[0].data = data[0];
+		options2.series[1].data = data[1];
+		options2.series[2].data = data[2];
+		options2.series[0].total = options2.series[0].data.reduce((a,b) => a+b);
+		options2.series[1].total = options2.series[1].data.reduce((a,b) => a+b);
+		options2.series[2].total = options2.series[2].data.reduce((a,b) => a+b);
+		options2.series[0].hourly = options2.series[0].total/14.0; // 14 jam kerja
+		options2.series[1].hourly = options2.series[1].total/14.0;
+		options2.series[2].hourly = options2.series[2].total/14.0;
+		var chart = new Highcharts.Chart(options2);
+	});	
+}
+
+function buildChart2() {
+  var options = {
+		credits: { enabled: false },
+    chart: {
+	  	type: 'pie',
+			renderTo: 'chart',
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false
+    },
+    title: {
+      text: 'Kunjungan pelanggan'
+    },
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+					format: '<b>{point.name}</b>: {y} ({percentage:.2f}%)',
+        }
+      }
+    },
+    series: [{}]
+  };
+
+	var year = $("#year").val();
+	var month = $("#month").val();
+  $.getJSON('{{@BASE}}/ajax/pelanggan/visit', 
+						{ year:year, month: month, type: 2, reset: resetCache}, 
+						function (data) {
+    options.series[0].data = data.map(i => parseFloat(i));
+    var chart = new Highcharts.Chart(options);
+  });
+}
+
+function buildChart3() {
+	var year = $("#year").val();
+	var month = $("#month").val();
+	var options = {
+		credits: { enabled: false },
+      chart: {
+		  	type: 'column',
+				renderTo: 'chart',
+	      plotBackgroundColor: null,
+	      plotBorderWidth: null,
+	      plotShadow: false,
+	    },
+			title: {
+         text: 'Belanja Pelanggan'
+      },
+			subtitle: {
+				text: 'Januari 2017'
+			},
+      xAxis: {
+          type: 'datetime',
+					Categories: ['Non-member', 'Member'],
+      },
+			yAxis: {
+				title: {
+					text: 'Orang',
+				}
+			},
+      series: [{
+					type: 'column',
+					name: 'Non-member',
+          pointInterval: 24 * 3600 * 1000,
+          pointStart: Date.UTC(year, month-1, 1),
+      }, {
+					type: 'column',
+					name: 'Member',
+          pointInterval: 24 * 3600 * 1000,
+          pointStart: Date.UTC(year, month-1, 1),
+      }, {
+					type: 'pie',
+					center: [100, 80],
+          size: 100,
+          showInLegend: false,
+					tooltip: {
+	    	    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)</b>'
+	        },
+					dataLabels: {
+            enabled: true,
+            color: '#000000',
+            connectorColor: '#000000',
+            format: '{point.percentage:.1f} %'
+          }
+			}],
+			legend: {
+				labelFormatter() {
+				  return '<div class="' + this.name + '-arrow"></div>' + this.name +
+					'<br/><span style="font-size:10px; color:#ababaa">' + 
+					rp_unit_formatter(this.options.total) + ' ('+
+					rp_unit_formatter(this.options.daily) +
+					'/hari)</span>';
+				}
+			}
+  };
+	$.getJSON('{{@BASE}}/ajax/pelanggan/visit', {type: 3, year: year, month: month, reset: resetCache }, function(data){		
+		options.series[0].data = data[0].map(i => parseFloat(i));
+		options.series[1].data = data[1].map(i => parseFloat(i));
+		options.series[0].total = data[0].reduce((a,b) => a+b);
+		options.series[1].total = data[1].reduce((a,b) => a+b);
+		options.series[0].daily = options.series[0].total/data[0].length;
+		options.series[1].daily = options.series[1].total/data[1].length;
+
+		options.series[2].data = [{
+			name: 'Non-member',
+			y: options.series[0].total, 
+		}, {
+			name: 'Member',
+			y: options.series[1].total,	
+		}];
+		var chart = new Highcharts.Chart(options);
+	});
+}
+
+
+$(function () {
+	Highcharts.getOptions().colors = 
+	Highcharts.map(Highcharts.getOptions().colors, function(color) {
+    return {
+      radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+      stops: [
+        [0, color],
+        [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+      ]
+    };
+	});	
+	// Load button
+	$('#load').click(function () {
+		switch($("#visit-type").val()) {
+			case "1":
+				$('#chart2').empty().css("height", "400px");
+  			buildChart1();
+				break;
+			case "2":
+				$('#chart2').empty().css("height", "0");
+  			buildChart2();
+				break;
+			case "3":
+				$('#chart2').empty().css("height", "0");
+  			buildChart3();
+				break;
+			default:
+		}
+	});
+});
+</script>

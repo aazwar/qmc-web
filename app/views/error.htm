@@ -1,0 +1,12 @@
+<body>
+  <h1>{{@ERROR.status}}</h1>
+  <pre>{{@ERROR.text}}</pre>
+	<check if="{{@ERROR.code == 500}}">
+		<code style="white-space: pre-wrap;">
+		{{@ERROR.trace|raw}}
+		</code>
+	</check>
+	<check if="{{@ERROR.code == 401}}">		
+		<include href="login.htm"/>
+	</check>
+</body>

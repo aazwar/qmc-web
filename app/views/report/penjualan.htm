@@ -1,0 +1,74 @@
+<p>  <strong>Catatan:</strong> Data yang ditampilkan adalah data statik untuk keperluan demo, tidak tergantung parameter yang dipilih. <br>
+  Halaman ini menunjukkan laporan dengan data berstruktur pohon tingkat tiga. <br>
+</p>
+<p>
+	{{ HtmlUtil::datePicker() }}
+	<span class="input-group-addon"><i class="fa fa-list-ul fa-fw"></i></span>
+	<input type="hidden" id="jenis" style="width: 200px;">
+	<input type="text" id="namafilter" placeholder="filter nama barang">
+	<br><br>
+  {{ HtmlUtil::sourceRadio() }}
+	{{ HtmlUtil::termRadio() }}
+	<input type="button" value="Tampilkan" id="load">
+</p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+function setupPenjualanGrid() {
+	setupGrid({
+		gridId: 'list',
+		pagerId: 'pager',
+		colNames: "Jenis|Jenis|Jenis|Barcode|Nama Barang|Jumlah|Satuan|Diskon|Total|Profit|% Profit",
+		colDefinitions: ["mjenis|hidden","sjenis|hidden", "ajenis|hidden", "kodebrg|80", 
+			"nama|190|text|count|({0}) total", "jumlah|40|number|sum", "satuan|40|number", 
+			"diskon|60|currency|sum", "penjualan|80|currency|sum",
+			"profit|60|currency|sum", "pprofit|40|percentage|avg"],
+		caption: 'Detail Penjualan',
+		maxHeight: 375,
+		groupCol: ['mjenis', 'sjenis', 'ajenis'],
+		footerSummary: ["penjualan|sum", "profit|sum", "nama|'Total'", "jumlah|sum",
+			"diskon|sum","pprofit|(sumprofit*100.0/sumpenjualan)"],		
+	});			
+	
+}
+
+$('#load').click(() => {
+  const url = `{{@BASE}}/ajax/laporan/penjualan/detail?${input2param()}`;
+	switch($('#term :checked').val()) {
+		case 'harian': 
+		  title = `Laporan Detail Penjualan tanggal ${$('#tanggal').val()}`;
+		break;
+		case 'mingguan':
+			const date = $('#tanggal').datepicker('getDate');
+		  var year = date.getFullYear();
+			let week = getWeek(date);
+			const weekString = ` (${weekRangeString(week, year)})`;
+			if (week < 10) week = `0${week}`;
+			title = `Laporan Detail Penjualan Mingguan ${year}W${week}${weekString}`;
+		break;
+		case 'bulanan':
+			var year = $('#tanggal').datepicker('getDate').getFullYear();
+			const month = $('#tanggal').datepicker('getDate').getMonth()+1;		
+			title = `Laporan Detail Penjualan Bulanan ${moment.months(month-1)} ${year}`;
+		break;
+	}
+	displayGrid('list', url, title);
+});
+
+$(() => {
+	$.get("{{@BASE}}/ajax/reference/jenis-list", {}, data => {
+		const obj = $.parseJSON(data);
+		obj.unshift({id: '', text: '-- Semua --'});
+		$('#jenis').select2({
+		  data: obj,	
+		});
+		if(hasUrlParams()) {
+      param2input();
+			$('#load').click();
+		}
+	});
+	
+  setupPenjualanGrid();		
+});
+
+</script>

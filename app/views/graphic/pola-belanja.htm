@@ -1,0 +1,174 @@
+<div id="help-dialog">
+- Klik tombol <strong>"Tampilkan Data"</strong> untuk menampilkan data kunjungan pada periode yang dipilih<br>
+</div>
+
+{{ HtmlUtil::yearSelect('tahun') }}
+{{ HtmlUtil::monthSelect('bulan', true, 'Setahun', 90) }}
+
+<input type="button" value="Tampilkan Data" id="load"><br><br>
+<div id="chart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script src="{{@BASE}}/js/highcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+function buildChart1() {
+	var tahun = $("#tahun").val();
+	var bulan = $("#bulan").val();
+	var width = $('#chart').width();
+  var options = {
+		credits: { enabled: false },
+    chart: {
+	  	type: 'pie',
+			renderTo: 'chart',
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false
+    },
+    title: {
+      text: 'Pola Belanja',
+    },
+		subtitle: {
+			text: '2017',
+		},
+    tooltip: {
+      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+					format: '<b>{point.name}</b>: {y} ({percentage:.2f}%)',
+        },
+				showInLegend: true,
+      }
+    },
+		labels: {
+        items: [
+					{
+            html: 'Belanja non-member',
+            style: {
+              left: (Math.round(width/8)-30)+'px',
+              top: '250px',
+              color: 'black'
+            }
+        	}, {
+            html: 'Nilai belanja non-member',
+            style: {
+              left: (Math.round(width*3/8)-30)+'px',
+              top: '250px',
+              color: 'black'
+            }
+		      },
+					{
+            html: 'Belanja member',
+            style: {
+              left: (Math.round(width*5/8)-30)+'px',
+              top: '250px',
+              color: 'black'
+            }
+        	}, {
+            html: 'Nilai belanja member',
+            style: {
+              left: (Math.round(width*7/8)-30)+'px',
+              top: '250px',
+              color: 'black'
+            }
+		      },
+				]
+    },
+    series: [
+			{ 
+				name: 'Non-member purchase',
+				center: [width/8, 100],
+        size: 150,
+        showInLegend: true,
+				tooltip: {
+    	    pointFormat: '{point.y} ({point.percentage:.1f}%)'
+        },
+				dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+          format: '{point.percentage:.1f} %'
+        },
+				yAxis: {
+					categories: ['< 10rb', '10rb-50rb', '50rb-100rb', '100rb-500rb', '> 500rb']
+				},
+	    },
+			{ 
+				name: 'Non-member purchase total',
+				center: [width*3/8, 100],
+        size: 150,
+        showInLegend: false,
+				tooltip: {
+    	    pointFormat: 'Rp {point.y} ({point.percentage:.1f}%)'
+        },
+				dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+          format: '{point.percentage:.1f} %'
+        }
+	    },
+			{ 
+				name: 'Member purchase',
+				center: [width*5/8, 100],
+        size: 150,
+        showInLegend: false,
+				tooltip: {
+    	    pointFormat: '{point.y} ({point.percentage:.1f}%)'
+        },
+				dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+          format: '{point.percentage:.1f} %'
+        }
+	    },
+			{ 
+				name: 'Member purchase total',
+				center: [width*7/8, 100],
+        size: 150,
+        showInLegend: false,
+				tooltip: {
+    	    pointFormat: 'Rp {point.y} ({point.percentage:.1f}%)'
+        },
+				dataLabels: {
+          enabled: true,
+          color: '#000000',
+          connectorColor: '#000000',
+          format: '{point.percentage:.1f} %'
+        }
+	    },
+		]
+  };
+
+  $.getJSON('{{@BASE}}/ajax/grafik/pola-belanja', {year:tahun, month: bulan, type: 1, reset: resetCache }, function (data) {
+    options.series[0].data = data[0];
+    options.series[1].data = data[1];
+    options.series[2].data = data[2];
+    options.series[3].data = data[3];
+    var chart = new Highcharts.Chart(options);
+  });
+}
+
+$(function () {
+	Highcharts.getOptions().colors = 
+	Highcharts.map(Highcharts.getOptions().colors, function(color) {
+    return {
+      radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+      stops: [
+        [0, color],
+        [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+      ]
+    };
+	});	
+	// Load button
+	$('#load').click(function () {
+		buildChart1();
+	});
+});
+</script>

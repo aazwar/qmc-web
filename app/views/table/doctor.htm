@@ -1,0 +1,36 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+var objJenisList;
+var objMerkList;
+
+function setupDepartmentGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "ID|photo|Name English|Name Arabic|Title EN|Title AR|Bio EN|Bio AR",
+    colDefinitions: ["id=gi#|30|number", "photo=*|90|image|{{@BASE}}/images", "name_en=*#|120|text|50",
+      "name_ar=*#|120|text|50", "title_en=*#|120|text|50", "title_ar=*#|120|text|50", 
+      "biography_en=*|200|text|80,5", "biography_ar=*|200|text|80,5"
+    ],
+    caption: 'Doctors',
+    otherOptions: {
+      sortname: 'id',
+    },
+    maxHeight: 650,
+    width: 1400,
+    formEditing: {
+      url: '{{@BASE}}/ajax/tabel/doctor/list1',
+      editurl: '{{@BASE}}/ajax/tabel/doctor/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 650,
+      }
+    },
+  });
+}
+
+$(() => {setupDepartmentGrid()})
+
+</script>

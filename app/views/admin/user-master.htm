@@ -1,0 +1,75 @@
+<br>
+<div style="box-sizing: border-box;">
+{{ HtmlUtil::grid() }}
+</div>
+<br>
+<script type="text/javascript">
+$(() => {
+	setupGrid({
+		gridId: 'list',
+		pagerId: 'pager',
+		colNames: "Username|Fullname|Group",
+		colDefinitions: ["login=ai#|80|text", "fullname=*#|150|text", "role=*#|150|text"],
+		caption: 'Daftar Pelanggan',
+		maxHeight: 450,
+    width: 500,
+		otherOptions: { sortname: 'login',},
+		formEditing: {
+						url: '{{@BASE}}/ajax/tabel/user/list',
+			editurl: '{{@BASE}}/ajax/tabel/user/edit',
+			formOptions: {
+				width: 400,
+				fields: {
+					groups: selectOptions({
+						'admin': 'Administrator',
+						'user': 'User',
+					}, 'user'),
+				}
+			},
+		},
+	});
+	$('#list').jqGrid('navButtonAdd', '#pager', {
+    id: 'pager_setpass',
+    caption: 'Password',
+		iconsOverText: true,
+    title: 'Password',
+		buttonicon: 'fa-lock',
+    onClickButton (e) {
+		  var id = selRowId('list');
+		  if (!id) {
+		    alert_dialog({text: 'Select a user first!'});
+        return;
+		  }
+
+      if (!$('#dialog_sp').length) {
+        $('body').append(`<div id="dialog_sp"><div id="dialog_content" style="width: 380px; height: 40px; "></div>
+          Password: <input type="password" class="ui-button ui-widget ui-corner-all ui-textfield" id="passw" style="width: 200px;"><br>
+          Retype: <input type="password" class="ui-button ui-widget ui-corner-all ui-textfield" id="passw2" style="width: 200px;"><br>
+        </div>`);
+        $('#dialog_sp').dialog({
+          autoOpen: false,
+          buttons: {
+            Set: function() {
+              if($('#passw').val().length < 6) {
+                alert_dialog({text: 'Minimum length is 6 characters!'});
+              } else if($('#passw').val() != $('#passw2').val()) {
+                alert_dialog({text: 'Passwords are not equal!'});
+              } else {
+                $.post(`${base_url}/ajax/tabel/user/setpass`, { login: selRowId('list'), pass: $('#passw').val() }, function(data) {
+                  $('#dialog_sp').dialog("close");
+                });
+              }
+            }
+          },
+          width: 400,
+          title: "Set User's Password"
+        });
+      }
+      $('#passw').focus().val('');
+      $('#passw2').val('');
+      $('#dialog_sp').dialog('open');
+	  }
+	});
+  
+});
+</script>

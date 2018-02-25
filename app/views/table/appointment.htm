@@ -1,0 +1,40 @@
+<div id="tanggal"></div>
+</div>
+Click the cell to edit Appointment. Appointment from App will be shown here.
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+function setupMarginGrid() {
+	setupGrid({
+		gridId: 'list',
+		pagerId: 'pager',
+		colNames: "Hour|Slot|Dental|Dermatology|Family|Gynecology|Hair Transplan|IV Hydration|Laboratory|Slimming|Plastic|Skin Care",
+		colDefinitions: ["hour|60|textc", "slot|30|numberc", "d1|160|text", "d2|160|text", "d3|160|text", "d4|160|text", "d5|160|text", 
+      "d6|160|text", "d7|160|text", "d8|160|text", "d9|160|text","d10|160|text",],
+		caption: 'Patient Appointment',
+    width: 1200,
+		otherOptions: { 
+			footerrow: false,
+	  },
+    multiselect: false,
+    cellEditing: {
+  		afterSaveCell (rowid, cellname, value, iRow, iCol) {
+        let date = $('#tanggal').val();
+        let [hour, slot] = rowid.split('-');
+        let department_id = cellname.substring(1);
+  			var url = `{{@BASE}}/ajax/tabel/Appointment/matrix-edit?date=${date}&hour=${hour}&slot=${slot}&department_id=${department_id}&patient_name=${value}`;
+  			$.post(url);
+  		},
+      fields: ['d1','d2','d3','d4','d5','d6','d7','d8','d9','d10']
+    }
+	});				
+}
+
+$(() => {
+	$('#tanggal').datepicker({"dateFormat": "yy-mm-dd"}).change(() => {
+	  displayGrid('list', `{{@BASE}}/ajax/tabel/Appointment/matrix?date=${$('#tanggal').val()}`)
+	});
+	setupMarginGrid();			
+  displayGrid('list', `{{@BASE}}/ajax/tabel/Appointment/matrix?date=${$('#tanggal').val()}`)
+});
+</script>

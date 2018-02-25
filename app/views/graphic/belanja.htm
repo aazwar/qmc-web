@@ -1,0 +1,64 @@
+<div id="help-dialog">
+- Grafik IKU (Indikator Kinerja Utama)
+</div>
+<p>
+<strong>Catatan:</strong> Data yang ditampilkan adalah data statik untuk keperluan demo, tidak tergantung parameter yang dipilih. <br>  
+</p>
+	<select id="grafik" style="width: 200px;">
+	  <option value="rerata-belanja">IKU: Rerata Belanja</option>
+	</select>
+{{ HtmlUtil::yearSelect() }}
+  
+ <input type="button" value="Tampilkan Data" id="load"><br><br>
+ <div id="chart" style="min-width: 310px; height: 550px; margin: 0 auto"></div>
+
+<script src="{{@BASE}}/js/highcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+function buildChartKPI(opt) {
+  $('.module_content').spin();
+	$.getJSON(`{{@BASE}}/ajax/grafik/${opt.grafik}`, input2param(), data => {		
+    new Highcharts.Chart(HCLineOpt({ 
+      renderTo: 'chart',
+      title: "Indikator Kinerja Utama",
+      subtitle: opt.title,
+      categories: arrayBulan({ tahun: $("#year").val() }),
+      yAxisTitle: opt.yAxisTitle,
+      seriesData: data,
+      seriesName: ['Non-Member', 'Member', 'Keseluruhan'],
+      noLegendTotal: true
+    }));
+    $('.module_content').spin(false);
+	});
+}
+
+$('#load').click(() => {
+	switch($('#grafik').val()) {
+		case 'rerata-belanja':
+    	buildChartKPI({
+    		title: 'Rerata Belanja',
+    		yAxisTitle: 'Rupiah',
+    		grafik: 'belanja'
+    	});
+			break;
+		case 'rerata-keuntungan':
+    	buildChartKPI({
+    		title: 'Rerata Keuntungan',
+    		yAxisTitle: 'Rupiah',
+    		grafik: 'rerata-keuntungan'
+    	});
+			break;
+		case 'rerata-upt':
+    	buildChartKPI({
+    		title: 'Rerata Item per-pembelian',
+    		yAxisTitle: 'Buah',
+        defaultYAxisLegend: true,
+    		grafik: 'rerata-upt'
+    	});
+      break;
+		default:
+		  break;
+	}
+});
+
+</script>

@@ -1,0 +1,160 @@
+<html lang="en" class=" js no-touch cssanimations">
+<!--<![endif]-->
+
+<head>
+  <!-- Title -->
+  <title>{{ @header_title }}</title>
+  <!-- Meta -->
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <!-- Favicon -->
+  <link href="favicon.ico" rel="shortcut icon">
+  <include href="core-header.htm"/>
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/themes/enlighten/css/jquery-ui.theme.min.css" />
+  <!-- Bootstrap Core CSS -->
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/bootstrap.css">
+  <!-- Template CSS -->
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/animate.css">
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/font-awesome.css">
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/nexus.css">
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/responsive.css">
+  <link rel="stylesheet" href="{{@BASE}}/themes/enlighten/css/custom.css">
+</head>
+
+<body>
+  <div class="slicknav_menu hidden-lg"><a href="#" aria-haspopup="true" tabindex="0" class="slicknav_btn slicknav_collapsed"
+      style="outline: none;"><span class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></a>
+    {~ (new Menu())->printMenuMobile(@SESSION.group) ~}    
+  </div>
+  <div id="body_bg">
+
+    <div class="primary-container-group">
+      <!-- Background -->
+      <div class="primary-container-background">
+        <div class="primary-container"></div>
+        <div class="clearfix"></div>
+      </div>
+      <!--End Background -->
+      <div class="primary-container">
+        <div id="header-sticky-wrapper" class="sticky-wrapper" style="height: 85px;">
+          <div id="header" class="container">
+            <div class="row">
+              <!-- Logo -->
+              <div class="logo">
+                <a href="index.html" title="">
+                  <img src="{{@BASE}}/themes/enlighten/img/logo.png" alt="Logo">
+                </a>
+              </div>
+              <!-- End Logo -->
+              <ul class="social-icons pull-right hidden-xs">
+                <li class="social-rss">
+                  <a href="#" target="_blank" title="RSS"></a>
+                </li>
+                <li class="social-twitter">
+                  <a href="#" target="_blank" title="Twitter"></a>
+                </li>
+                <li class="social-facebook">
+                  <a href="#" target="_blank" title="Facebook"></a>
+                </li>
+                <li class="social-googleplus">
+                  <a href="#" target="_blank" title="GooglePlus"></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Top Menu -->
+        <div id="hornav-sticky-wrapper" class="sticky-wrapper" style="height: 49px;">
+          <div id="hornav" class="container no-padding">
+            <div class="row">
+              <div class="col-md-12 no-padding">
+                <div class="pull-right visible-lg">
+              		<check if="{{@SESSION.group}}">
+              			{~ (new Menu())->printMenu(@SESSION.group) ~}
+              		</check>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Top Menu -->
+        <!-- === END HEADER === -->
+        <!-- === BEGIN CONTENT === -->
+        
+        <div id="content">
+          <div class="container">
+            <div class="row margin-vert-30">
+              <!-- Main Column -->
+              <div class="panel panel-default panel-scope" id="css">
+                  <div class="panel-heading"><h3>{{@report_title|raw}}</h3></div>
+                  <div class="panel-body">
+              				<check if="{{@content}}">
+              					<include href="{{@content}}"/>
+              				</check>
+                  </div>
+              </div>        
+              <!-- End Main Column -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- === END CONTENT === -->
+    <!-- === BEGIN FOOTER === -->
+
+    <!-- Footer Menu -->
+    <div id="footer">
+      <div class="container">
+        <div class="row">
+          <div id="copyright" class="col-md-4">
+            <p>(c) 2014 Your Copyright Info</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- End Footer Menu -->
+    <!-- JS -->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/scripts.js"></script>
+    <!-- Isotope - Portfolio Sorting -->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/jquery.isotope.js"></script>
+    <!-- Mobile Menu - Slicknav -->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/jquery.slicknav.js"></script>
+    <!-- Animate on Scroll-->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/jquery.visible.js"
+      charset="utf-8"></script>
+    <!-- Sticky Div -->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/jquery.sticky.js"
+      charset="utf-8"></script>
+    <!-- Slimbox2-->
+    <script type="text/javascript" src="{{@BASE}}/themes/enlighten/js/slimbox2.js" charset="utf-8"></script>
+    <!-- Modernizr -->
+    <script src="{{@BASE}}/themes/enlighten/js/modernizr.custom.js" type="text/javascript"></script>
+    <!-- End JS -->
+
+
+    <!-- === END FOOTER === -->
+  </div>
+  <div id="lbOverlay" style="display: none;"></div>
+  <div id="lbCenter" style="display: none;">
+    <div id="lbImage">
+      <div style="position: relative;">
+        <a id="lbPrevLink" href="#"></a>
+        <a id="lbNextLink" href="#"></a>
+      </div>
+    </div>
+  </div>
+  <div id="lbBottomContainer" style="display: none;">
+    <div id="lbBottom">
+      <a id="lbCloseLink" href="#"></a>
+      <div id="lbCaption"></div>
+      <div id="lbNumber"></div>
+      <div style="clear: both;"></div>
+    </div>
+  </div>
+</body>
+
+</html>

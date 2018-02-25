@@ -1,0 +1,30 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+
+function setupDepartmentGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "ID|Name English|Name Arabic",
+    colDefinitions: ["id=gi#|30|number", "name_en=*#|200|text|50", "name_ar=*#|200|text|50",],
+    caption: 'Department',
+    otherOptions: {
+      sortname: 'id',
+    },
+    maxHeight: 450,
+    formEditing: {
+      url: '{{@BASE}}/ajax/tabel/department/list1',
+      editurl: '{{@BASE}}/ajax/tabel/department/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 500,
+      }
+    },
+  });
+}
+
+$(() => {setupDepartmentGrid()})
+
+</script>

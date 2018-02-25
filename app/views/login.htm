@@ -1,0 +1,12 @@
+<form action="{{@BASE}}/login" method="POST">
+<fieldset style="width: 150px;">
+  <label>{{@TXT_NAMA_USER}}</label>
+	<input type="text" name="username" style="width: 160px;">
+</fieldset>
+<fieldset style="width: 150px;">
+  <label>{{@TXT_KATA_SANDI}}</label>
+	<input type="password" name="password" style="width: 160px;">
+</fieldset>
+<input type="hidden" name="url" value="{{ @PARAMS[0] != "/login" ? @PARAMS[0] : "/" }}">
+<input type="submit" value="Login">
+</form>

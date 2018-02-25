@@ -1,0 +1,55 @@
+<p><strong>Catatan:</strong> Data yang ditampilkan adalah data statik, parameter tidak mempengaruhi data.<br>
+Contoh laporan dengan subgrid. Klik ikon segitiga di sebelah kiri untuk detail.
+</p>
+<p>
+	{{ HtmlUtil::datePicker() }}
+	<input type="button" value="Tampilkan Data" id="load"><br>
+</p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+$(() => {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "Tanggal|Waktu|Pelanggan|Nota|Penjualan|Poin|Kasir",
+    colDefinitions: ["tanggal|60|date", "waktu|60|textc",
+      "pelanggan|150|text", "nofaktur|80|text",
+      "penjualan|80|currency|sum", "poin|30|numberc", "kasir|80|textc"
+    ],
+    caption: 'Penjualan Per-Nota',
+    maxHeight: 425,
+    footerSummary: ["potongan|sum", "penjualan|sum", "nota|'Total'",
+      "poin|sum"
+    ],
+    multiselect: false,
+    hasSubgrid: true,
+  });
+
+  setupSubgrid({
+    gridId: 'list',
+    colNames: "Barcode|Nama Barang|Jumlah|Satuan|Potongan|Total",
+    colDefinitions: ["kodebrg|80", "namabrg|180", "jumlah|30|numberc",
+      "satuan|60|currency", "potongan|60|currency", "total|80|currency"
+    ],
+    url: '"{{@BASE}}/ajax/laporan/penjualan/detail-nota?nofaktur="+rowid',
+    footerSummary: ["namabrg|'Total'", "jumlah|sum", "potongan|sum",
+      "total|sum"
+    ],
+  });
+});
+
+$('#load').click(() => {
+  const url = `{{@BASE}}/ajax/laporan/penjualan/pernota?${input2param()}`;
+  const title = `Laporan Penjualan Per-Nota tanggal ${$('#tanggal').val()}`;
+  displayGrid('list', url, title);
+});
+
+$('#nofaktur').on("keydown", function(e) {
+  if(e.which == 13) {
+    $('#load').click();
+    $(this).blur();
+  }
+});
+
+</script>

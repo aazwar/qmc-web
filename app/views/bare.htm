@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8"/>
+	<title>{{ @header_title }}</title>
+
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/jquery-ui.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/jquery-ui.theme.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/ui.jqgrid.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/select2.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/style.min.css" />
+	<!--[if lt IE 9]>
+	<link rel="stylesheet" href="{{@BASE}}/css/ie.css" type="text/css" media="screen" />
+	<script src="{{@BASE}}/js/html5.js"></script>
+	<![endif]-->
+	<script src="{{@BASE}}/js/jquery.min.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/jquery.jqgrid.min.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/lodash.min.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/select2.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/autoNumeric.js" type="text/javascript"></script>
+	<script src="{{@BASE}}/js/moment.min.js" type="text/javascript"></script>
+
+	<script src="{{@BASE}}/js/library.min.js" type="text/javascript"></script>
+
+  <check if="{{@APP.lang && @APP.lang != 'EN'}}">
+    <script src="{{@BASE}}/js/locale.min.js" type="text/javascript"></script>
+  </check>
+	<script type="text/javascript">
+		var base_url = '{{@BASE}}';
+	</script>
+	<script src="{{@BASE}}/js/fuwafuwa.min.js" type="text/javascript"></script>
+</head>
+
+
+<body>
+<check if="{{@content}}">
+	<include href="{{@content}}"/>
+</check>
+</body>
+
+</html>

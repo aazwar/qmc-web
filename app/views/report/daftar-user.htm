@@ -1,0 +1,24 @@
+<p>
+	<input type="button" value="Tampilkan" id="load">
+</p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+$(() => {
+	setupGrid({
+		gridId: 'list',
+		pagerId: 'pager',
+		colNames: "Login|Name|Role|Password Hash",
+		colDefinitions: ["login|120|text", "fullname|180|text", "role|80|text", "password|300|text"],
+		caption: 'Daftar User',
+		maxHeight: 375,
+	});			
+});
+
+$('#load').click(() => {
+  const url = `{{@BASE}}/ajax/laporan/user/list?${input2param()}`;
+  const title = 'Daftar User';
+	displayGrid('list', url, title);
+});
+
+</script>

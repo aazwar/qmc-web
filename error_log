@@ -1,0 +1,6 @@
+[07-Feb-2018 10:22:27 Asia/Jakarta] HTTP 401 (GET /chat/manager)
+[07-Feb-2018 10:22:27 Asia/Jakarta] [qmc/vendor/xfra35/f3-access/lib/access.php:111] Base->error()
+[07-Feb-2018 10:22:27 Asia/Jakarta] [qmc/app/controllers/fuwafuwa/viewcontroller.php:8] Access->authorize()
+[07-Feb-2018 10:22:27 Asia/Jakarta] [qmc/app/controllers/fuwafuwa/home.php:28] Fuwafuwa\ViewController->execute()
+[07-Feb-2018 10:22:27 Asia/Jakarta] [qmc/vendor/bcosca/fatfree-core/base.php:1612] Base->call()
+[07-Feb-2018 10:22:27 Asia/Jakarta] [qmc/index.php:6] Base->run()

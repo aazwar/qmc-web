@@ -1,0 +1,36 @@
+<div id="help-dialog">
+</div>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+function setupMarginGrid() {
+	setupGrid({
+		gridId: 'list',
+		pagerId: 'pager',
+		colNames: "Doctor|Status",
+		colDefinitions: ["doctor|220|text","status|80|check"],
+		caption: 'Working Hour',
+    autowidth: false,
+		otherOptions: { 
+			footerrow: false,
+	  },
+    multiselect: false,
+    cellEditing: {
+  		afterSaveCell (rowid, cellname, value, iRow, iCol) {
+  			var url = `{{@BASE}}/ajax/tabel/WorkingHour/matrix-edit?hour=${rowid}&day=${cellname[1]}&value=${value}`;
+  			$.post(url);
+  		},
+      fields: ['d1','d2','d3','d4','d5','d6','d7',]
+    }
+	});				
+}
+
+$(function () {
+	// Init
+	setupMarginGrid();			
+  $('#list').jqGrid('setGridParam', {
+    datatype: "json",
+    url: "{{@BASE}}/ajax/tabel/WorkingHour/matrix",
+  }).trigger('reloadGrid');
+});
+</script>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8"/>
+	<title>{{ @header_title }}</title>
+
+  <!-- Core JS & CSS here -->
+  <include href="core-header.htm"/>
+	<link rel="stylesheet" type="text/css" media="screen" href="{{@BASE}}/css/jquery-ui.theme.min.css" />  
+</head>
+
+
+<body>
+
+	<header id="header">
+		<hgroup>
+			<h1 class="site_title"><a href="{{@BASE}}/">{{@COMPANY.name}}</a></h1>
+      <h2 class="section_title">
+      <check if="{{ @APP.title }}">
+        <true></true>{{ @APP.title }}
+        <false>Report Dashboard{{ preg_match('/-dev/', getcwd())?'<span style="color: red; weight: bold"> (DEV)</span>':'' }}</false>
+      </check>
+      </h2>
+		</hgroup>
+	</header> <!-- end of header bar -->
+	
+	<section id="secondary_bar">
+		<div class="user">
+			<p>{{ @SESSION.fullname ?: 'Guest' }}</p>
+			<!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
+		</div>
+		<check if="{{@SESSION.group}}">
+			{~ (new \Fuwafuwa\Menu())->printMenu(@SESSION.group) ~}
+		</check>
+		<!--<div class="breadcrumbs_container">
+			<article class="breadcrumbs"><a>Website Admin</a> <div class="breadcrumb_divider"></div> <a class="current">Dashboard</a></article>
+		</div>-->
+	</section><!-- end of secondary bar -->
+	
+	<section id="main" class="column">
+				
+		<article class="module width_full">
+			<header><h3>{{@report_title|raw}}&nbsp;<button id="help"></button>&nbsp;<button id="reset-cache"></button><span id="gutter"></span></h3></header>
+			<div class="module_content">
+				<check if="{{@content}}">
+					<include href="{{@content}}"/>
+				</check>
+				<div class="clear"></div>
+			</div>
+		</article>
+		
+		<div class="spacer"></div>
+	</section>
+
+	<div id='prt-container' class='hide'></div>
+	<check if="{{@SESSION.group}}">
+	<script>
+	
+  	// keep login
+  	const timerId = setInterval(() => {
+  		$.get('{{@BASE}}/login_check');
+  	}, 60000*15);
+	
+  	$(() => {
+  		// disable autocomplete
+  		$(document).on('focus', ':input', function() {
+  		    $(this).attr('autocomplete', 'off');
+  		});
+
+  	  // hack
+      $('#main-menu').prepend('<li></li');
+      $('.user').appendTo($('#main-menu li:first'));
+      
+  	})
+	
+  	const check_login = () => {
+  		$.get('{{@BASE}}/login_check', {}, resp => {
+  			if(!parseInt(resp)) {
+  				//location.href = '{{@BASE}}/logout';
+          location.reload();
+  			}
+  		})
+  	};
+	
+  	$(document).idle({
+  		idle: 600000,
+  		onShow() {
+  			check_login();
+  		},
+  		onActive() {
+  			check_login();
+  		}
+  	})
+	
+	</script>
+	</check>
+</body>
+
+</html>
