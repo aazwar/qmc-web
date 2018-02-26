@@ -1,0 +1,36 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+
+function setupCategoryGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "ID|Category|Before Image|Caption|After Image|Caption",
+    colDefinitions: ["id=ai#|30|number", "category=*#|200|text|50", "before_image=*#|80|image|{{@BASE}}/images/case_history", 
+      "before_caption=*#200|text|5,80", "AFTER_image=*#|80|image|{{@BASE}}/images/case_history", 
+      "AFTER_caption=*#200|text|5,80", 
+    ],
+    caption: 'History Case',
+    otherOptions: {
+      sortname: 'h.id',
+    },
+    maxHeight: 450,
+    formEditing: {
+      url: '{{@BASE}}/ajax/tabel/history/list1',
+      editurl: '{{@BASE}}/ajax/tabel/history/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 500,
+      }
+    },
+  });
+}
+
+$(() => {
+  setupCategoryGrid();
+  $('#add_list').remove();
+})
+
+</script>

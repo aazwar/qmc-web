@@ -1,8 +1,8 @@
-<form action="{{@BASE}}/case/upload" method="post" enctype="multipart/form-data">
+<form action="{{@BASE}}/imupload/gallery" method="post" enctype="multipart/form-data">
 <table>
   <tr>
     <td>Category</td>
-    <td>{{ HtmlUtil::select('case_category', '1', '', 'id', 'name')}}</td>
+    <td>{{ HtmlUtil::select('case_category', 'category', '1', 'id', 'name')}}</td>
   </tr>
   <tr>
     <td>Before Image</td>

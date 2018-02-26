@@ -5,6 +5,8 @@ Data
   Working Hour | table/working-hour
   Appointment | table/appointment
   History Case
+    Category | table/category
+    History | table/history
     Upload Image | case-history/upload
 Admin
   Daftar User | admin/user-master

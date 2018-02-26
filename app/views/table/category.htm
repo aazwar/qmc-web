@@ -1,0 +1,30 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+
+function setupCategoryGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "ID|Name|Cover",
+    colDefinitions: ["id=ai#|30|number", "name=*#|200|text|50", "cover_image=*#|80|image|{{@BASE}}/images/case_history"],
+    caption: 'Department',
+    otherOptions: {
+      sortname: 'id',
+    },
+    maxHeight: 450,
+    formEditing: {
+      url: '{{@BASE}}/ajax/tabel/category/list1',
+      editurl: '{{@BASE}}/ajax/tabel/category/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 500,
+      }
+    },
+  });
+}
+
+$(() => {setupCategoryGrid()})
+
+</script>

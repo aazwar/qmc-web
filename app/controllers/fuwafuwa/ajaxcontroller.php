@@ -52,6 +52,7 @@ class AjaxController extends Controller {
       case 'add':
         if(!$record->dry()) {
           $result['success'] = false;
+          print_r($record);
           if(is_array($pk)) {
             foreach($pk as $k) {
               $keys[] = $$k;
