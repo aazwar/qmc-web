@@ -25,11 +25,9 @@ class Chat extends \Fuwafuwa\AjaxController {
   }
   
   function register() {
-    $expo = \ExponentPhpSDK\Expo::normalSetup();
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
     SQL('INSERT OR REPLACE INTO chat_user VALUES(?, ?, ?)', $data['channel_id'], $data['name'], $data['push_token']);
-    $expo->subscribe($data['channel_id'], $data['push_token']);
     print "Success";
   }
   
@@ -72,10 +70,7 @@ class Chat extends \Fuwafuwa\AjaxController {
   function reply() {
     extract($this->request);
     SQL('INSERT INTO messages VALUES (?, ?, ?, ?, ?)', $channel_id, $this->gen_uuid(), 2, $datetime, $text);
-    $expo = \ExponentPhpSDK\Expo::normalSetup();
-    $notification = ['body' => substr($text, 0, 200)];
-    $expo->notify($channel_id, $notification);
-    print "Ok";
+    print \Expo\Notification::send($channel_id, $text);
   }
   
   function test() {

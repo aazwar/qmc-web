@@ -82,6 +82,7 @@
     </td>
   </tr>
 </table>
+<span id="msg"></span>
 
   </div>
   
@@ -160,6 +161,8 @@
            <span class="time-right">${moment(data.datetime).format('HH:mm')}</span>
          </div>
       `);
+      let x = $.parseJSON(response);
+      $('#msg').text(x.body.data[0].status);
       $('#reply_text').val('');
       scroll_messages_bottom();
     });
