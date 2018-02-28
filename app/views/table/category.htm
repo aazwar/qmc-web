@@ -7,9 +7,10 @@ function setupCategoryGrid() {
   setupGrid({
     gridId: 'list',
     pagerId: 'pager',
-    colNames: "ID|Name|Cover",
-    colDefinitions: ["id=ai#|30|number", "name=*#|200|text|50", "cover_image=*#|80|image|{{@BASE}}/images/case_history"],
-    caption: 'Department',
+    colNames: "ID|Name|Description|Cover",
+    colDefinitions: ["id=ai#|30|number", "name=*#|200|text|50", "description=*#|200|text|50,3",
+     "cover_image=*#|80|image|{{@BASE}}/images/case_history"],
+    caption: 'Case Category',
     otherOptions: {
       sortname: 'id',
     },

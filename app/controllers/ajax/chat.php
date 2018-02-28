@@ -40,6 +40,11 @@ class Chat extends \Fuwafuwa\AjaxController {
   function send() {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
+    // guard to check automatically register non member
+    if(FSQL1('SELECT COUNT(1) FROM chat_user WHERE channel_id = ?', $data['channel_id']) == 0) {
+      $data['name'] = substr(str_replace('-', '_', $data['channel_id']), 0, 10);
+      SQL('INSERT OR REPLACE INTO chat_user VALUES(?, ?, ?)', $data['channel_id'], $data['name'], $data['push_token']);
+    }
     foreach($data['messages'] as $m) {
       SQL('INSERT INTO messages VALUES(?,?,?,?,?)', $data['channel_id'], $m['id'], $m['user_id'], $m['datetime'], $m['text']);
     }

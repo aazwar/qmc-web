@@ -3,7 +3,7 @@ namespace Ajax\Tabel;
 
 class Category extends \Fuwafuwa\AjaxController {
 	function list1() {
-		record_list('case_category', ["id", "name", "cover_image" ]);
+		record_list('case_category', ["id", "name", "description", "cover_image" ]);
 	}
 
 	function edit() {
