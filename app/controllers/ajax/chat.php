@@ -34,7 +34,7 @@ class Chat extends \Fuwafuwa\AjaxController {
   function change_name() {
     $json = file_get_contents('php://input');
     $data = json_decode($json, true);
-    SQL('REPLACE INTO chat_user (channel_id, name) VALUES (?,?)', $data['channel_id'], $data['name']);
+    SQL('UPDATE chat_user SET name = ? WHERE channel_id = ?', $data['name'], $data['channel_id']);
   }
   
   function send() {
