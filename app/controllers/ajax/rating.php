@@ -19,4 +19,8 @@ class Rating extends \Fuwafuwa\AjaxController {
     $res = ["reviews" => $data]; 
     print(json_encode($res));
   }
+	
+	function list1() {
+		record_list('review', ["date", "name_en", "name", "rating", "review"]);
+	}
 }

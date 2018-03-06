@@ -1,5 +1,6 @@
 Data
   Conversation | chat/manager
+  Review | table/review
   Department | table/department
   Doctor | table/doctor
   Working Hour | table/working-hour
