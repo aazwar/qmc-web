@@ -1,0 +1,31 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+
+function setupCategoryGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "Date|Department|Name|Rating|Review",
+    colDefinitions: ["date|80|date", "department|80|text", "user|150|text", "rating|30|text",
+     "review|200|text"],
+    caption: 'Review',
+    otherOptions: {
+      sortname: 'date',
+    },
+    maxHeight: 450,
+    formEditing: {
+      url: '{{@BASE}}/ajax/rating/list1',
+      //editurl: '{{@BASE}}/ajax/tabel/category/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 500,
+      }
+    },
+  });
+}
+
+$(() => {setupCategoryGrid()})
+
+</script>

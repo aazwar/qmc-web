@@ -1,0 +1,30 @@
+<p></p>
+{{ HtmlUtil::grid() }}
+
+<script type="text/javascript">
+
+function setupVideoGrid() {
+  setupGrid({
+    gridId: 'list',
+    pagerId: 'pager',
+    colNames: "Video ID|Date|Caption|Video",
+    colDefinitions: ["id=i*|60|text", "date=*|60|date", "caption=*|200|text|80,5", "video|150|video"],
+    caption: 'Review',
+    otherOptions: {
+      sortname: 'date',
+    },
+    maxHeight: 450,
+    formEditing: {
+      url: '{{@BASE}}/ajax/tabel/video/list1',
+      editurl: '{{@BASE}}/ajax/tabel/video/edit',
+      deleteMenu: false,
+      formOptions: {
+        width: 600,
+      }
+    },
+  });
+}
+
+$(() => {setupVideoGrid()})
+
+</script>
