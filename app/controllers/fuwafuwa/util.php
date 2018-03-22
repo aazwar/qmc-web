@@ -116,8 +116,9 @@ function record_list($a80071f37, $i69fe4aec, $ab71a=[], $abf89b7a96f0=[]) {
 	  FROM $a80071f37
 		$e265
 	  $a70a1 LIMIT $aea2b, $caa9f";
-	//print " pre $a5c07930f0"; die();
+	//print "<pre>$a5c07930f0</pre>"; die();
 	$eb4a88 = FSQL($a5c07930f0);
+	//print_r($eb4a88);
 	array2json($eb4a88, 0, $ee294, $i718, $a0tal_pages);
 }         
 
