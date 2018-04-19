@@ -18,7 +18,7 @@ class Home {
   	$class = str_replace(['/', '-'], ['\\', '_'], $class); 
   	//$class = ucwords($class, '\\');
   	$class = preg_replace_callback("/(\w+)/", function($m) { return ucfirst($m[1]); }, $class);
-  	$action = basename($f3[PARAMS]['*']);
+  	$action = basename($f3['PARAMS']['*']);
   	$action = str_replace('-', '_', $action);
   	if(class_exists($class)) { // Classes that extends \Fuwafuwa\AjaxController, or free class
   		(new $class())->execute($f3, $action);
